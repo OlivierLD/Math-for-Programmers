@@ -1,0 +1,57 @@
+plugins {
+  id 'java'
+//  id 'scala'
+  id 'idea'
+  id 'maven'
+  id 'com.github.johnrengelman.shadow' version '5.2.0'
+}
+
+compileJava.options.encoding = 'ISO-8859-1'
+compileJava.options.compilerArgs += ["-Xlint:unchecked"]
+
+group = 'oliv.math.for.programmer'
+version = '1.0'
+
+tasks.withType(JavaCompile) {
+  if (JavaVersion.current() != project.targetCompatibility) {
+//    throw new GradleException(
+    println "+------ Warning: Java version (JAVA_HOME) possible mismatch -----\n" +
+            "| In task $name ($project.name), the java version used ${JavaVersion.current()} is not the expected version ${project.targetCompatibility}.\n" +
+            "+----------------------------------------------------------------"
+//    )
+  } else {
+    println ">> From task $name (in $project.name), using java version ${JavaVersion.current()} "
+  }
+  options.encoding = 'UTF-8'
+}
+
+dependencies {
+    // compile project(':http-tiny-server')
+//    compile group: 'org.knowm.xchart', name: 'xchart', version: '3.7.0'
+    compile 'org.knowm.xchart:xchart:3.7.0'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+//    maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
+//    maven { url "http://lediouris.net/maven2" }
+//    maven { url "https://plugins.gradle.org/m2/" }
+    maven { url "https://www.datanucleus.org/downloads/maven2" } // Contains xmlparserv2 from Oracle
+    maven { url "https://mvnrepository.com/artifact/" }
+
+//    maven { url "https://oss.sonatype.org/content/groups/public" } // PI4J ?
+}
+
+build.doFirst {
+    println "+---------------------------------------------------------------------------------------"
+    println "| >>> You may want to comment or uncomment several modules in 'settings.gradle':"
+    println "|     - opencv"
+    println "|     - Project-Trunk:REST-clients:REST-assembler:springboot-sensors"
+    println "| Also, depending on your environment, scala steps might be too demanding..."
+    println "| If needed, you can exclude them, like in ./gradlew clean build -x :<module-name>:compileScala "
+    println "| On low-RAM boards, use --no-daemon, like in ./gradlew --no-daemon clean build "
+    println "+---------------------------------------------------------------------------------------"
+    println " ... and the --continue flag is still available."
+    println "+---------------------------------------------------------------------------------------"
+}
