@@ -12,17 +12,17 @@ import org.knowm.xchart.VectorGraphicsEncoder;
 import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
-import org.knowm.xchart.style.Styler;
+//import org.knowm.xchart.style.Styler;
+import org.knowm.xchart.style.Styler.CardinalPosition;
+import org.knowm.xchart.style.Styler.TextAlignment;
+import static org.knowm.xchart.XYSeries.XYSeriesRenderStyle;
+import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import matrix.SquareMatrix;
 import matrix.SystemUtil;
-import org.knowm.xchart.style.Styler.CardinalPosition;
-import org.knowm.xchart.style.Styler.TextAlignment;
-import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.knowm.xchart.XYSeries.*;
 
 /**
  * For XChart:
@@ -214,21 +214,21 @@ public class Section01 {
         chart.getStyler().setPlotContentSize(.95);
 
         XYSeries seriesLiability = chart.addSeries("Raw", xData, yData);
-        seriesLiability.setMarker(SeriesMarkers.NONE);
+        seriesLiability.setMarker(SeriesMarkers.NONE);  // remove the dots
         if (false) { // An option to try...
             seriesLiability.setXYSeriesRenderStyle(XYSeriesRenderStyle.Area);
-            seriesLiability.setMarker(SeriesMarkers.NONE);
+//            seriesLiability.setMarker(SeriesMarkers.NONE);
         }
 
         XYSeries lined = chart.addSeries("Lined", xData, yDataSmoothed);
         lined.setXYSeriesRenderStyle(XYSeriesRenderStyle.Line);
-        lined.setMarker(SeriesMarkers.NONE);
+        lined.setMarker(SeriesMarkers.NONE);  // remove the dots
 
         XYSeries top1 = chart.addSeries("Top", xData, top);
-        top1.setMarker(SeriesMarkers.NONE);
+        top1.setMarker(SeriesMarkers.NONE);  // remove the dots
 
         XYSeries bottom1 = chart.addSeries("Bottom", xData, bottom);
-        bottom1.setMarker(SeriesMarkers.NONE);
+        bottom1.setMarker(SeriesMarkers.NONE);  // remove the dots
 
         // Render the chart
 //        BitmapEncoder.getBufferedImage(chart);
