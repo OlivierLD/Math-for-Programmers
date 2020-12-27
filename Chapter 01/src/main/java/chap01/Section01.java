@@ -16,9 +16,13 @@ import org.knowm.xchart.style.Styler;
 
 import matrix.SquareMatrix;
 import matrix.SystemUtil;
+import org.knowm.xchart.style.Styler.CardinalPosition;
+import org.knowm.xchart.style.Styler.TextAlignment;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.knowm.xchart.XYSeries.*;
 
 /**
  * For XChart:
@@ -201,22 +205,30 @@ public class Section01 {
                 .build();
 
         // Customize Chart
-        chart.getStyler().setLegendPosition(Styler.CardinalPosition.InsideNW);
-        chart.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
-        chart.getStyler().setYAxisLabelAlignment(Styler.TextAlignment.Right);
+        chart.getStyler().setLegendPosition(CardinalPosition.InsideNW);
+//        chart.getStyler().setDefaultSeriesRenderStyle(XYSeriesRenderStyle.Line);
+//        chart.getStyler().setDefaultSeriesRenderStyle(XYSeriesRenderStyle.Scatter);
+        chart.getStyler().setYAxisLabelAlignment(TextAlignment.Right);
         chart.getStyler().setYAxisDecimalPattern("$ #,###.##");
         chart.getStyler().setPlotMargin(0);
         chart.getStyler().setPlotContentSize(.95);
 
         XYSeries seriesLiability = chart.addSeries("Raw", xData, yData);
+        seriesLiability.setMarker(SeriesMarkers.NONE);
         if (false) { // An option to try...
-            seriesLiability.setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Area);
+            seriesLiability.setXYSeriesRenderStyle(XYSeriesRenderStyle.Area);
             seriesLiability.setMarker(SeriesMarkers.NONE);
         }
 
-        chart.addSeries("Lined", xData, yDataSmoothed);
-        chart.addSeries("Top", xData, top);
-        chart.addSeries("Bottom", xData, bottom);
+        XYSeries lined = chart.addSeries("Lined", xData, yDataSmoothed);
+        lined.setXYSeriesRenderStyle(XYSeriesRenderStyle.Line);
+        lined.setMarker(SeriesMarkers.NONE);
+
+        XYSeries top1 = chart.addSeries("Top", xData, top);
+        top1.setMarker(SeriesMarkers.NONE);
+
+        XYSeries bottom1 = chart.addSeries("Bottom", xData, bottom);
+        bottom1.setMarker(SeriesMarkers.NONE);
 
         // Render the chart
 //        BitmapEncoder.getBufferedImage(chart);
