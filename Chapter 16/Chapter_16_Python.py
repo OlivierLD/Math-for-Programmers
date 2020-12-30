@@ -3,7 +3,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-help("modules")
+# help("modules")
 from sklearn import datasets
 
 digits = datasets.load_digits()

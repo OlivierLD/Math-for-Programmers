@@ -1,14 +1,13 @@
 package chap01;
 
-import org.knowm.xchart.SwingWrapper;
-import org.knowm.xchart.XYChart;
-import org.knowm.xchart.XYChartBuilder;
-import org.knowm.xchart.XYSeries;
+import org.knowm.xchart.*;
 import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.colors.XChartSeriesColors;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 
-import java.awt.BasicStroke;
+import javax.swing.JFrame;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,53 +41,104 @@ public class Section02 {
                 .toArray();
 
         // Plot the data
-        XYChart chart = new XYChartBuilder()
+        if (true) {
+            XYChart chart1 = new XYChartBuilder()
+                    .width(800)
+                    .height(600)
+                    .title("Prices and Mileage")
+                    .xAxisTitle("Mileage (1,000 of miles)")
+                    .yAxisTitle("Price ($)")
+                    .build();
+
+            // Customize Chart
+            chart1.getStyler().setLegendPosition(Styler.CardinalPosition.InsideNE);
+
+            XYSeries seriesLiability = chart1.addSeries("Mileage (theory)", xs, ys);
+            seriesLiability.setMarker(SeriesMarkers.NONE);
+            seriesLiability.setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
+
+            // Scattered data
+            XYSeries scattered = chart1.addSeries("Actual", mileages, prices);
+            scattered.setMarker(SeriesMarkers.CIRCLE);
+            chart1.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Scatter);
+            chart1.getStyler().setMarkerSize(16);
+
+            // Render the chart
+//      BitmapEncoder.getBufferedImage(chart);
+            new SwingWrapper<>(chart1).displayChart();
+        }
+
+        // Plot the data, updated
+        XYChart chart2 = new XYChartBuilder()
                 .width(800)
                 .height(600)
-                .title("Prices and Mileage")
-                .xAxisTitle("Mileage (10,000 of miles)")
+                .title("Prices and Mileage, plus target")
+                .xAxisTitle("Mileage (1,000 of miles)")
                 .yAxisTitle("Price ($)")
                 .build();
 
         // Customize Chart
-        chart.getStyler().setLegendPosition(Styler.CardinalPosition.InsideNE);
+        chart2.getStyler().setLegendPosition(Styler.CardinalPosition.InsideNE);
 
-        XYSeries seriesLiability = chart.addSeries("Mileage (theory)", xs, ys);
-        seriesLiability.setMarker(SeriesMarkers.NONE);
-        seriesLiability.setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
+        XYSeries seriesLiability2 = chart2.addSeries("Mileage (theory)", xs, ys);
+        seriesLiability2.setMarker(SeriesMarkers.NONE);
+        seriesLiability2.setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
 
         // Scattered data
-        XYSeries scattered = chart.addSeries("Actual", mileages, prices);
-        scattered.setMarker(SeriesMarkers.CIRCLE);
-        chart.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Scatter);
-        chart.getStyler().setMarkerSize(16);
+        XYSeries scattered2 = chart2.addSeries("Actual", mileages, prices);
+        scattered2.setMarker(SeriesMarkers.CIRCLE);
+        chart2.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Scatter);
+        chart2.getStyler().setMarkerSize(16);
 
-        // Render the chart
-//      BitmapEncoder.getBufferedImage(chart);
-        new SwingWrapper(chart).displayChart();
-
-        double targetMileage = Math.log(10 / 26.5) / Math.log(0.905);
+        // New data
+        double kBudget = 10d; // 10 000 $
+        double targetMileage = Math.log(kBudget / 26.5) / Math.log(0.905); // find X
         double targetPrice = price(targetMileage);
         System.out.println(String.format("Target %f (10,000s of miles), price: %.02f$", targetMileage, targetPrice));
 
         double xTargetFrom = 0;
-        double xTargetTo   = 25;
-        XYSeries target1 = chart.addSeries("Target-Y",
-                new double[] {xTargetFrom, xTargetTo},
-                new double[] {targetPrice, targetPrice});
+        double xTargetTo = 25;
+        XYSeries target1 = chart2.addSeries("Target-Y (Budget)",
+                new double[]{xTargetFrom, xTargetTo},
+                new double[]{targetPrice, targetPrice});
         target1.setMarker(SeriesMarkers.NONE);
         target1.setLineColor(XChartSeriesColors.RED);
         target1.setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
         BasicStroke dottedStroke = new BasicStroke(1f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1f, new float[]{5f, 5f}, 0f);
         target1.setLineStyle(dottedStroke);
-        XYSeries target2 = chart.addSeries("Target-X",
-                new double[] {targetMileage, targetMileage},
-                new double[] {0, targetPrice});
+        XYSeries target2 = chart2.addSeries("Target-X (the deal)",
+                new double[]{targetMileage, targetMileage},
+                new double[]{0, targetPrice});
         target2.setMarker(SeriesMarkers.NONE);
-        target2.setLineColor(XChartSeriesColors.RED);
+        target2.setLineColor(XChartSeriesColors.PURPLE);
         target2.setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
         target2.setLineStyle(dottedStroke);
+        target2.setLabel("Here is your deal!");
 
-        new SwingWrapper(chart).displayChart();
+//        BufferedImage bufferedImage = BitmapEncoder.getBufferedImage(chart2);
+        SwingWrapper<XYChart> xyChartSwingWrapper = new SwingWrapper<>(chart2);
+        JFrame jFrame = xyChartSwingWrapper.displayChart();
+        
+        // Below: no impact...
+        Container contentPane = jFrame.getContentPane();
+        System.out.println("Content Pane is a " + contentPane.getClass().getName());
+
+        Component[] components = contentPane.getComponents();
+        System.out.println(">> There are " + components.length + " components under the contentPane");
+
+        Component component = components[0];
+        Graphics graphics = component.getGraphics();
+        Graphics2D g2d = (Graphics2D) graphics;
+        System.out.println(String.format("Content Pane dim: %d x %d",
+                component.getWidth(),
+                component.getHeight()));
+        g2d.setColor(Color.MAGENTA);
+        System.out.println("Font is " + graphics.getFont());
+        g2d.setFont(graphics.getFont().deriveFont(30).deriveFont(Font.BOLD));
+        g2d.drawString("Final Result", 200, 300);
+        component.repaint();
+
+        jFrame.setTitle("Final Result!");
+        jFrame.repaint();
     }
 }

@@ -1,2 +1,3 @@
 rootProject.name = 'math-for-programmers'
 include 'Chapter 01'
+include 'Chapter 02'
