@@ -7,9 +7,12 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.UIManager;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 public class SwingSample {
@@ -17,49 +20,62 @@ public class SwingSample {
     private JFrame frame;
     private JMenuBar menuBar = new JMenuBar();
     private JMenu menuFile = new JMenu();
+    private JMenuItem menuFileCustomAction = new JMenuItem();
     private JMenuItem menuFileExit = new JMenuItem();
     private JMenu menuHelp = new JMenu();
     private JMenuItem menuHelpAbout = new JMenuItem();
 
     private WhiteBoardPanel jPanel = new WhiteBoardPanel(g2d -> {
-
         g2d.setColor(Color.BLACK);
-        g2d.fillRect(0, 0, 800, 600);
+        g2d.fillRect(0, 0, 800, 600); // Hard coded dimensions for that one.
         g2d.setFont(g2d.getFont().deriveFont(Font.BOLD).deriveFont(30f));
         g2d.setColor(Color.ORANGE);
         g2d.drawString("This is your white board!", 10, 40);
         g2d.setColor(Color.LIGHT_GRAY);
         g2d.setFont(g2d.getFont().deriveFont(Font.BOLD).deriveFont(16f));
-        String message = "Override the overridden paintComponent method in JPanel";
+        String message = "Use the WhiteBoardPanel.setWhiteBoardWriter method.";
         g2d.drawString(message, 40, 80);
     });
 
+    private void customAction_ActionPerformed(ActionEvent ae) {
+        System.out.println("Custom Action requested - Change repaint, take a snapshot");
+        File snap = new File("snap.jpg");
+        Dimension dimension = jPanel.getSize();
+        jPanel.setWhiteBoardWriter(g2d -> {
+            g2d.setColor(Color.RED);
+            g2d.fillRect(0, 0, dimension.width, dimension.height);
+            g2d.setFont(new Font("courier", Font.BOLD | Font.ITALIC, 32));
+            g2d.setColor(Color.PINK);
+            g2d.drawString("This is your white board!", 10, 40);
+            g2d.setColor(Color.LIGHT_GRAY);
+            g2d.setFont(g2d.getFont().deriveFont(Font.BOLD).deriveFont(16f));
+            String message = "Use the WhiteBoardPanel.setWhiteBoardWriter method.";
+            g2d.drawString(message, 40, 80);
+            g2d.setColor(Color.BLACK);
+            g2d.drawOval(50, 100, dimension.width - 100, dimension.height - 200);
+        });
+        jPanel.repaint();
+        jPanel.createImage(snap, "jpg", dimension.width, dimension.height);
+    }
     private void fileExit_ActionPerformed(ActionEvent ae) {
         System.out.println("Exit requested");
     }
     private void helpAbout_ActionPerformed(ActionEvent ae) {
-        System.out.println("Help requested - Take a snapshot");
-        File snap = new File("snap.jpg");
-        jPanel.createImage(snap, "jpg", 800, 600);
+        System.out.println("Help requested");
     }
 
     private void jbInit() throws Exception {
         frame.setJMenuBar(menuBar);
         frame.getContentPane().setLayout(new BorderLayout());
         menuFile.setText("File");
+        menuFileCustomAction.setText("Custom Action");
+        menuFileCustomAction.addActionListener(ae -> customAction_ActionPerformed(ae));
+        menuFile.add(menuFileCustomAction);
         menuFileExit.setText("Exit");
-        menuFileExit.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                fileExit_ActionPerformed(ae);
-            }
-        });
+        menuFileExit.addActionListener(ae -> fileExit_ActionPerformed(ae));
         menuHelp.setText("Help");
         menuHelpAbout.setText("About");
-        menuHelpAbout.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ae) {
-                helpAbout_ActionPerformed(ae);
-            }
-        });
+        menuHelpAbout.addActionListener(ae -> helpAbout_ActionPerformed(ae));
         menuFile.add(menuFileExit);
         menuBar.add(menuFile);
         menuHelp.add(menuHelpAbout);

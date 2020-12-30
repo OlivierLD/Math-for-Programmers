@@ -1,7 +1,5 @@
 package chap02.SwingUtils;
 
-import chap02.SwingSample;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -24,8 +22,11 @@ public class WhiteBoardPanel extends JPanel {
         g2d.drawString(message, 40, 80);
     };
 
-    public WhiteBoardPanel() {}
+    public WhiteBoardPanel() {
+    }
+
     public WhiteBoardPanel(Consumer<Graphics2D> whiteBoardWriter) {
+        this();
         this.whiteBoardWriter = whiteBoardWriter;
     }
 
@@ -35,7 +36,7 @@ public class WhiteBoardPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-//            System.out.println("paintComponent invoked on JPanel");
+//        System.out.println("paintComponent invoked on JPanel");
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         whiteBoardWriter.accept(g2d);
@@ -71,5 +72,14 @@ public class WhiteBoardPanel extends JPanel {
             }
         });
         refreshThread.start();
+    }
+
+    public BufferedImage getImage() {
+        Dimension size = this.getSize();
+        final BufferedImage bufferedImage = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
+        // Create a graphics contents on the buffered image
+        Graphics2D g2d = bufferedImage.createGraphics();
+        this.paintComponent((Graphics) g2d);
+        return bufferedImage;
     }
 }
