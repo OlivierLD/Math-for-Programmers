@@ -2,15 +2,12 @@ package chap02;
 
 import chap02.SwingUtils.WhiteBoardPanel;
 
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.UIManager;
+import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -25,7 +22,7 @@ public class SwingSample {
     private JMenu menuHelp = new JMenu();
     private JMenuItem menuHelpAbout = new JMenuItem();
 
-    private WhiteBoardPanel jPanel = new WhiteBoardPanel(g2d -> {
+    private WhiteBoardPanel whiteBoard = new WhiteBoardPanel(g2d -> {
         g2d.setColor(Color.BLACK);
         g2d.fillRect(0, 0, 800, 600); // Hard coded dimensions for that one.
         g2d.setFont(g2d.getFont().deriveFont(Font.BOLD).deriveFont(30f));
@@ -40,28 +37,35 @@ public class SwingSample {
     private void customAction_ActionPerformed(ActionEvent ae) {
         System.out.println("Custom Action requested - Change repaint, take a snapshot");
         File snap = new File("snap.jpg");
-        Dimension dimension = jPanel.getSize();
-        jPanel.setWhiteBoardWriter(g2d -> {
+        Dimension dimension = whiteBoard.getSize();
+        whiteBoard.setWhiteBoardWriter(g2d -> {
             g2d.setColor(Color.RED);
             g2d.fillRect(0, 0, dimension.width, dimension.height);
-            g2d.setFont(new Font("courier", Font.BOLD | Font.ITALIC, 32));
+            g2d.setFont(new Font("courier new", Font.BOLD | Font.ITALIC, 48));
+//            g2d.setFont(new Font("source code pro", Font.BOLD | Font.ITALIC, 48));
             g2d.setColor(Color.PINK);
-            g2d.drawString("This is your white board!", 10, 40);
+            g2d.drawString("This is your white board!", 10, 60);
             g2d.setColor(Color.LIGHT_GRAY);
             g2d.setFont(g2d.getFont().deriveFont(Font.BOLD).deriveFont(16f));
             String message = "Use the WhiteBoardPanel.setWhiteBoardWriter method.";
-            g2d.drawString(message, 40, 80);
+            g2d.drawString(message, 40, 100);
             g2d.setColor(Color.BLACK);
-            g2d.drawOval(50, 100, dimension.width - 100, dimension.height - 200);
+            g2d.drawOval(50, 110, dimension.width - 100, dimension.height - 200);
+            // Arrow
+            WhiteBoardPanel.drawArrow(g2d,
+                    new Point(400, 300),
+                    new Point(300, 200),
+                    Color.WHITE);
         });
-        jPanel.repaint();
-        jPanel.createImage(snap, "jpg", dimension.width, dimension.height);
+        whiteBoard.repaint();
+        whiteBoard.createImage(snap, "jpg", dimension.width, dimension.height);
     }
     private void fileExit_ActionPerformed(ActionEvent ae) {
         System.out.println("Exit requested");
     }
     private void helpAbout_ActionPerformed(ActionEvent ae) {
         System.out.println("Help requested");
+        JOptionPane.showMessageDialog(whiteBoard, "Help would go here", "Help", JOptionPane.PLAIN_MESSAGE);
     }
 
     private void jbInit() throws Exception {
@@ -81,7 +85,7 @@ public class SwingSample {
         menuHelp.add(menuHelpAbout);
         menuBar.add(menuHelp);
 
-        frame.getContentPane().add(jPanel, BorderLayout.CENTER);
+        frame.getContentPane().add(whiteBoard, BorderLayout.CENTER);
     }
 
     public SwingSample() {
