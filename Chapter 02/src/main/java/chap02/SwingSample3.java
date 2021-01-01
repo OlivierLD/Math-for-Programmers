@@ -117,7 +117,7 @@ public class SwingSample3 {
         // The function points
         for (double i=-6; i<=15; i+=0.25) {
             xOrig.add(i);
-            yOrig.add((0.01 * Math.pow(i, 3)) - (0.1 * Math.pow(i, 2)) + 3);
+            yOrig.add((0.01 * Math.pow(i, 3)) - (0.1 * Math.pow(i, 2)) - (0.2 * i) + 3);
         }
 
         double[] x = xOrig.stream().mapToDouble(Double::doubleValue).toArray();
@@ -155,8 +155,8 @@ public class SwingSample3 {
             int maxX = findCanvasXCoord.apply(graphicRange.getMaxX());
             int minY = findCanvasYCoord.apply(graphicRange.getMinY());
             int maxY = findCanvasYCoord.apply(graphicRange.getMaxY());
-            System.out.println(String.format("Working Rectangle: x:%d, y:%d, w:%d, h:%d", minX, minY, (maxX - minX), (maxY - minY)));
-            g2d.drawRect(minX, minY, (maxX - minX), (maxY - minY));
+            System.out.println(String.format("Working Rectangle: x:%d, y:%d, w:%d, h:%d", minX, HEIGHT - maxY, (maxX - minX), (maxY - minY)));
+            g2d.drawRect(minX, HEIGHT - maxY, (maxX - minX), (maxY - minY));
 
             // Vertical X (left) Arrow
             WhiteBoardPanel.drawArrow(g2d,
@@ -171,7 +171,7 @@ public class SwingSample3 {
             while (canvasX < WIDTH) {
                 canvasX = findCanvasXCoord.apply((double)xTick);
                 g2d.drawLine(canvasX, HEIGHT - (int)Math.round(y0 - 5),
-                        canvasX, HEIGHT - (int)Math.round(y0 + 5));
+                             canvasX, HEIGHT - (int)Math.round(y0 + 5));
                 xTick += 1;
             }
             // X Notches, negative
@@ -180,7 +180,7 @@ public class SwingSample3 {
             while (canvasX > 0) {
                 canvasX = findCanvasXCoord.apply((double)xTick);
                 g2d.drawLine(canvasX, HEIGHT - (int)Math.round(y0 - 5),
-                        canvasX, HEIGHT - (int)Math.round(y0 + 5));
+                             canvasX, HEIGHT - (int)Math.round(y0 + 5));
                 xTick -= 1;
             }
 
@@ -206,18 +206,21 @@ public class SwingSample3 {
             while (canvasY > 0) {
                 canvasY = findCanvasYCoord.apply((double)yTick);
                 g2d.drawLine((int)Math.round(x0 - 5), HEIGHT - canvasY,
-                        (int)Math.round(x0 + 5), HEIGHT - canvasY);
+                             (int)Math.round(x0 + 5), HEIGHT - canvasY);
                 yTick -= 1;
             }
 
-            g2d.setColor(Color.LIGHT_GRAY);
-            g2d.setFont(g2d.getFont().deriveFont(Font.BOLD | Font.ITALIC).deriveFont(30f));
+            // For the text
+            g2d.setColor(Color.GRAY);
+            g2d.setFont(g2d.getFont().deriveFont(Font.BOLD | Font.ITALIC).deriveFont(24f));
+            // (0.01 * Math.pow(i, 3)) - (0.1 * Math.pow(i, 2)) - (0.2 * i) + 3
+            g2d.drawString("y = (0.01 * x^3) + (-0.1 * x^2) - (0.2 * x) + 3", 10, 60);
 
             /*
              *  THE DATA
              */
-            g2d.setColor(new Color(0, 0, 255, 125)); // blue
-            g2d.setStroke(new BasicStroke(3));             // Thickness
+            g2d.setColor(new Color(0, 0, 255, 125)); // Line Color
+            g2d.setStroke(new BasicStroke(3));             // Line Thickness
             boolean withPoints = false;
             Point previous = null;
             for (int i=0; i<x.length; i++) {
