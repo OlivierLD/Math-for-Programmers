@@ -8,6 +8,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,9 +16,10 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.function.Function;
 
-public class SwingSample2 {
+public class SwingSample3 {
 
     private JFrame frame;
     private JMenuBar menuBar = new JMenuBar();
@@ -66,8 +68,8 @@ public class SwingSample2 {
         frame.getContentPane().add(whiteBoard, BorderLayout.CENTER);
     }
 
-    public SwingSample2() {
-        frame = new JFrame("This is example #2");
+    public SwingSample3() {
+        frame = new JFrame("This is example #3");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = frame.getSize();
         System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
@@ -102,16 +104,26 @@ public class SwingSample2 {
             e.printStackTrace();
         }
 
-     /* SwingSample swingSample = */ new SwingSample2();
+     /* SwingSample swingSample = */ new SwingSample3();
 
         // Get the range here
-        VectorUtils.Vector2D one = new VectorUtils.Vector2D(-1, -2);
-        VectorUtils.Vector2D two = new VectorUtils.Vector2D(3, 4);
-        VectorUtils.Vector2D three = VectorUtils.toPolar(one);
-        VectorUtils.Vector2D four = new VectorUtils.Vector2D(5, 6);
-        VectorUtils.Vector2D five = new VectorUtils.Vector2D(7, 2);
+        java.util.List<Double> xOrig = new ArrayList<>();
+        java.util.List<Double> yOrig = new ArrayList<>();
+        // The function points
+//        for (double i=-10; i<=10; i+=0.5) {
+//            xOrig.add(i);
+//            yOrig.add((0.2 * Math.pow(i, 2)) - 3);
+//        }
+        // The function points
+        for (double i=-6; i<=15; i+=0.25) {
+            xOrig.add(i);
+            yOrig.add((0.01 * Math.pow(i, 3)) - (0.1 * Math.pow(i, 2)) + 3);
+        }
 
-        VectorUtils.GraphicRange graphicRange = VectorUtils.findGraphicRange(one, two, three, four, five);
+        double[] x = xOrig.stream().mapToDouble(Double::doubleValue).toArray();
+        double[] y = yOrig.stream().mapToDouble(Double::doubleValue).toArray();
+
+        VectorUtils.GraphicRange graphicRange = VectorUtils.findGraphicRange(x, y);
         double xAmplitude = graphicRange.getMaxX() - graphicRange.getMinX();
         double yAmplitude = graphicRange.getMaxY() - graphicRange.getMinY();
 
@@ -127,9 +139,9 @@ public class SwingSample2 {
         double x0 = findCanvasXCoord.apply(0d); // Math.round(0 - graphicRange.getMinX()) * oneUnit;
         double y0 = findCanvasYCoord.apply(0d); // Math.round(0 - graphicRange.getMinY()) * oneUnit;
 
-        System.out.println(String.format("y0: %f (minY: %f)", y0, graphicRange.getMinY()));
+//        System.out.println(String.format("y0: %f (minY: %f)", y0, graphicRange.getMinY()));
 
-        int CIRCLE_DIAM = 30;
+        int CIRCLE_DIAM = 2;
         Dimension dimension = new Dimension(WIDTH, HEIGHT);
 
         whiteBoard.setWhiteBoardWriter(g2d -> {
@@ -137,15 +149,16 @@ public class SwingSample2 {
             g2d.fillRect(0, 0, dimension.width, dimension.height);
 
             // Actual working zone, from graphicRange
-            g2d.setColor(Color.GRAY);
+            g2d.setColor(Color.PINK); // GRAY);
             // graphicRange.getMaxX() graphicRange.getMinX() graphicRange.getMaxY() graphicRange.getMinY()
             int minX = findCanvasXCoord.apply(graphicRange.getMinX());
             int maxX = findCanvasXCoord.apply(graphicRange.getMaxX());
             int minY = findCanvasYCoord.apply(graphicRange.getMinY());
             int maxY = findCanvasYCoord.apply(graphicRange.getMaxY());
+            System.out.println(String.format("Working Rectangle: x:%d, y:%d, w:%d, h:%d", minX, minY, (maxX - minX), (maxY - minY)));
             g2d.drawRect(minX, minY, (maxX - minX), (maxY - minY));
 
-            // Vertical (left) Arrow
+            // Vertical X (left) Arrow
             WhiteBoardPanel.drawArrow(g2d,
                     new Point((int)Math.round(x0), HEIGHT),
                     new Point((int)Math.round(x0), 0),
@@ -171,7 +184,7 @@ public class SwingSample2 {
                 xTick -= 1;
             }
 
-            // Horizontal (bottom) Arrow
+            // Horizontal Y (bottom) Arrow
             WhiteBoardPanel.drawArrow(g2d,
                     new Point(0, HEIGHT - (int)Math.round(y0)),
                     new Point(WIDTH, HEIGHT - (int)Math.round(y0)),
@@ -200,66 +213,30 @@ public class SwingSample2 {
             g2d.setColor(Color.LIGHT_GRAY);
             g2d.setFont(g2d.getFont().deriveFont(Font.BOLD | Font.ITALIC).deriveFont(30f));
 
-            // Points, Vectors
+            /*
+             *  THE DATA
+             */
             g2d.setColor(new Color(0, 0, 255, 125)); // blue
-            int pointX = findCanvasXCoord.apply(one.getX());
-            int pointY = findCanvasYCoord.apply(one.getY());
-            g2d.fillOval(pointX - (CIRCLE_DIAM / 2),
-                    HEIGHT - pointY - (CIRCLE_DIAM / 2),
-                    CIRCLE_DIAM, CIRCLE_DIAM);
-            WhiteBoardPanel.drawArrow(g2d,
-                    new Point((int)Math.round(x0), HEIGHT - (int)Math.round(y0)),
-                    new Point(pointX, HEIGHT - pointY),
-                    new Color(0, 0, 255, 125));
-
-            g2d.setColor(new Color(255, 0, 0, 125)); // red
-            pointX = findCanvasXCoord.apply(two.getX());
-            pointY = findCanvasYCoord.apply(two.getY());
-            g2d.fillOval(pointX - (CIRCLE_DIAM / 2),
-                    HEIGHT - pointY - (CIRCLE_DIAM / 2),
-                    CIRCLE_DIAM, CIRCLE_DIAM);
-            WhiteBoardPanel.drawArrow(g2d,
-                    new Point((int)Math.round(x0), HEIGHT - (int)Math.round(y0)),
-                    new Point(pointX, HEIGHT - pointY),
-                    new Color(255, 0, 0, 125));
-
-            g2d.setColor(new Color(0, 255, 0, 125)); // green
-            pointX = findCanvasXCoord.apply(three.getX());
-            pointY = findCanvasYCoord.apply(three.getY());
-            g2d.fillOval(pointX - (CIRCLE_DIAM / 2),
-                    HEIGHT - pointY - (CIRCLE_DIAM / 2),
-                    CIRCLE_DIAM, CIRCLE_DIAM);
-            WhiteBoardPanel.drawArrow(g2d,
-                    new Point((int)Math.round(x0), HEIGHT - (int)Math.round(y0)),
-                    new Point(pointX, HEIGHT - pointY),
-                    new Color(0, 255, 0, 125));
-
-            g2d.setColor(new Color(0, 255, 255, 125)); // cyan
-            pointX = findCanvasXCoord.apply(four.getX());
-            pointY = findCanvasYCoord.apply(four.getY());
-            g2d.fillOval(pointX - (CIRCLE_DIAM / 2),
-                    HEIGHT - pointY - (CIRCLE_DIAM / 2),
-                    CIRCLE_DIAM, CIRCLE_DIAM);
-            WhiteBoardPanel.drawArrow(g2d,
-                    new Point((int)Math.round(x0), HEIGHT - (int)Math.round(y0)),
-                    new Point(pointX, HEIGHT - pointY),
-                    new Color(0, 255, 255, 125));
-
-            g2d.setColor(new Color(255, 255, 0, 125)); // yellow
-            pointX = findCanvasXCoord.apply(five.getX());
-            pointY = findCanvasYCoord.apply(five.getY());
-            g2d.fillOval(pointX - (CIRCLE_DIAM / 2),
-                    HEIGHT - pointY - (CIRCLE_DIAM / 2),
-                    CIRCLE_DIAM, CIRCLE_DIAM);
-            WhiteBoardPanel.drawArrow(g2d,
-                    new Point((int)Math.round(x0), HEIGHT - (int)Math.round(y0)),
-                    new Point(pointX, HEIGHT - pointY),
-                    new Color(255, 255, 0, 125));
+            g2d.setStroke(new BasicStroke(3));             // Thickness
+            boolean withPoints = false;
+            Point previous = null;
+            for (int i=0; i<x.length; i++) {
+                int pointX = findCanvasXCoord.apply(x[i]);
+                int pointY = findCanvasYCoord.apply(y[i]);
+//                System.out.println(String.format("x:%f, y:%f => X:%d, Y:%d", x[i], y[i], pointX, pointY));
+                Point here = new Point(pointX, pointY);
+                if (withPoints) {
+                    g2d.fillOval(pointX - (CIRCLE_DIAM / 2),
+                            HEIGHT - pointY - (CIRCLE_DIAM / 2),
+                            CIRCLE_DIAM, CIRCLE_DIAM);
+                }
+                if (previous != null) {
+                    g2d.drawLine(previous.x, HEIGHT - previous.y, here.x, HEIGHT - here.y);
+                }
+                previous = here;
+            }
         });
 //        whiteBoard.getImage(); // This is for the Notebook
         whiteBoard.repaint(); /// This is for a pure Swing context
-
-//        double perimeter = VectorUtils.perimeter(Arrays.asList(one, two, three, four));
-
     }
 }

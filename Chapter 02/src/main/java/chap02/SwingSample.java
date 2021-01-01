@@ -41,7 +41,7 @@ public class SwingSample {
         whiteBoard.setWhiteBoardWriter(g2d -> {
             g2d.setColor(Color.RED);
             g2d.fillRect(0, 0, dimension.width, dimension.height);
-            g2d.setFont(new Font("courier new", Font.BOLD | Font.ITALIC, 48));
+            g2d.setFont(new Font("Courier New", Font.BOLD | Font.ITALIC, 48));
 //            g2d.setFont(new Font("source code pro", Font.BOLD | Font.ITALIC, 48));
             g2d.setColor(Color.PINK);
             g2d.drawString("This is your white board!", 10, 60);

@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * Basic vector manipulation, translated from Python.
- *
+ * <p>
  * C'est moi qui l'ai fait.
  */
 public class VectorUtils {
@@ -17,70 +17,77 @@ public class VectorUtils {
     public static class Vector2D {
         private double x;
         private double y;
-        public Vector2D() {}
+
+        public Vector2D() {
+        }
+
         public Vector2D(double x, double y) {
             this.x = x;
             this.y = y;
         }
+
         public Vector2D x(double x) {
             this.x = x;
             return this;
         }
+
         public Vector2D y(double y) {
             this.y = y;
             return this;
         }
+
         public double getX() {
             return this.x;
         }
+
         public double getY() {
             return this.y;
         }
 
         @Override
         public String toString() {
-            return(String.format("X:%f, Y:%f", this.x, this.y));
+            return (String.format("X:%f, Y:%f", this.x, this.y));
         }
     }
 
-//    def subtract(v1,v2):
+    //    def subtract(v1,v2):
 //            return (v1[0] - v2[0], v1[1] - v2[1])
     public static Vector2D subtract(Vector2D one, Vector2D two) {
         return new Vector2D(one.getX() - two.getX(), one.getY() - two.getY());
     }
 
-//    def add(*vectors):
+    //    def add(*vectors):
 //            return (sum([v[0] for v in vectors]), sum([v[1] for v in vectors]))
     public static Vector2D add(List<Vector2D> vectors) {
         return new Vector2D(vectors.stream().mapToDouble(Vector2D::getX).sum(),
-                          vectors.stream().mapToDouble(Vector2D::getY).sum());
+                vectors.stream().mapToDouble(Vector2D::getY).sum());
     }
 
-//    def length(v):
+    //    def length(v):
 //            return sqrt(v[0]**2 + v[1]**2)
     public static double length(Vector2D v) {
         return Math.sqrt(Math.pow(v.getX(), 2) + Math.pow(v.getY(), 2));
     }
 
-//    def distance(v1,v2):
+    //    def distance(v1,v2):
 //            return length(subtract(v1,v2))
     public static double distance(Vector2D v1, Vector2D v2) {
         return length(subtract(v1, v2));
     }
 
-//    def perimeter(vectors):
+    //    def perimeter(vectors):
 //    distances = [distance(vectors[i], vectors[(i+1)%len(vectors)])
 //            for i in range(0,len(vectors))]
 //            return sum(distances)
     public static double perimeter(List<Vector2D> vectors) {
         double dist = 0d;
-        for (int i=0; i<vectors.size(); i++) {
-            dist += distance(vectors.get(i), vectors.get((i+1) % vectors.size()));
+        for (int i = 0; i < vectors.size(); i++) {
+            dist += distance(vectors.get(i), vectors.get((i + 1) % vectors.size()));
         }
         return dist;
     }
 
-//    def scale(scalar,v):
+    //    def scale(scalar,v):
 //            return (scalar * v[0], scalar * v[1])
     public static Vector2D scale(double scalar, Vector2D v) {
         return new Vector2D(scalar * v.getX(), scalar * v.getY());
@@ -89,28 +96,29 @@ public class VectorUtils {
 //    def to_cartesian(polar_vector):
 //    length, angle = polar_vector[0], polar_vector[1]
 //            return (length*cos(angle), length*sin(angle))
+
     /**
-     *
      * @param length as you can guess
-     * @param angle in <u><i>Radians</i></u>
+     * @param angle  in <u><i>Radians</i></u>
      * @return the cartesian equivalent of the polar coordinates
      */
     public static Vector2D toCartesian(double length, double angle) {
         return new Vector2D(length * Math.cos(angle), length * Math.sin(angle));
     }
 
-//    def translate(translation, vectors):
+    //    def translate(translation, vectors):
 //            return [add(translation, v) for v in vectors]
     public static Vector2D translate(Vector2D translation, Vector2D vector) {
         return translate(translation, Arrays.asList(vector)).stream().findFirst().get();
     }
+
     public static List<Vector2D> translate(Vector2D translation, List<Vector2D> vectors) {
         List<Vector2D> translated = new ArrayList<>();
         vectors.forEach(v -> translated.add(add(Arrays.asList(translation, v))));
         return translated;
     }
 
-//    def to_polar(vector):
+    //    def to_polar(vector):
 //        x, y = vector[0], vector[1]
 //        angle = atan2(y,x)
 //        return (length(vector), angle)
@@ -119,12 +127,13 @@ public class VectorUtils {
         return new Vector2D(length(vector), angle);
     }
 
-//    def rotate(angle, vectors):
+    //    def rotate(angle, vectors):
 //      polars = [to_polar(v) for v in vectors]
 //            return [to_cartesian((l, a+angle)) for l,a in polars]
     public static Vector2D rotate(double angle, Vector2D vector) {
         return rotate(angle, Arrays.asList(vector)).stream().findFirst().get();
     }
+
     public static List<Vector2D> rotate(double angle, List<Vector2D> vectors) {
         List<Vector2D> rotated = new ArrayList<>();
         vectors.forEach(v -> rotated.add(toCartesian(v.getX(), v.getY() + angle)));
@@ -214,8 +223,22 @@ public class VectorUtils {
         return graphicRange;
     }
 
+    // TODO A version with Lists
+    public static GraphicRange findGraphicRange(double[] x, double[] y) {
+        assert (x.length == y.length);
+        GraphicRange graphicRange = new GraphicRange().minX(0).maxX(0).minY(0).maxY(0);
+        for (int i = 0; i < x.length; i++) {
+            graphicRange.setMinX(Math.min(graphicRange.getMinX(), x[i]));
+            graphicRange.setMaxX(Math.max(graphicRange.getMaxX(), x[i]));
+            graphicRange.setMinY(Math.min(graphicRange.getMinY(), y[i]));
+            graphicRange.setMaxY(Math.max(graphicRange.getMaxY(), y[i]));
+        }
+        return graphicRange;
+    }
+
     /**
      * This is for tests.
+     *
      * @param args Not used.
      */
     public static void main(String... args) {
