@@ -136,7 +136,10 @@ public class VectorUtils {
 
     public static List<Vector2D> rotate(double angle, List<Vector2D> vectors) {
         List<Vector2D> rotated = new ArrayList<>();
-        vectors.forEach(v -> rotated.add(toCartesian(v.getX(), v.getY() + angle)));
+        vectors.forEach(v -> {
+            Vector2D polar = toPolar(v);
+            rotated.add(toCartesian(polar.getX(), polar.getY() + angle));
+        });
         return rotated;
     }
 
@@ -247,6 +250,17 @@ public class VectorUtils {
         return graphicRange;
     }
 
+    public static GraphicRange findGraphicRange(List<Vector2D> data) {
+        GraphicRange graphicRange = new GraphicRange().minX(0).maxX(0).minY(0).maxY(0);
+        data.forEach(v -> {
+            graphicRange.setMinX(Math.min(graphicRange.getMinX(), v.getX()));
+            graphicRange.setMaxX(Math.max(graphicRange.getMaxX(), v.getX()));
+            graphicRange.setMinY(Math.min(graphicRange.getMinY(), v.getY()));
+            graphicRange.setMaxY(Math.max(graphicRange.getMaxY(), v.getY()));
+        });
+        return graphicRange;
+    }
+
     /**
      * This is for tests.
      *
@@ -268,7 +282,8 @@ public class VectorUtils {
         Vector2D backToBase = translate(new Vector2D().x(-5).y(-6), translated.get(0));
         System.out.println("Back to One: " + backToBase);
 
-        List<Vector2D> rotated = rotate(Math.toRadians(45), Arrays.asList(one, two));
+        System.out.println(String.format("Rotating 90 degrees %s and %s", one, two));
+        List<Vector2D> rotated = rotate(Math.toRadians(90), Arrays.asList(one, two));
         rotated.forEach(v -> System.out.printf("Rotated: %s%n", v));
 
         Vector2D rotateOne = rotate(Math.PI * 2, one);
