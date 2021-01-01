@@ -223,7 +223,6 @@ public class VectorUtils {
         return graphicRange;
     }
 
-    // TODO A version with Lists
     public static GraphicRange findGraphicRange(double[] x, double[] y) {
         assert (x.length == y.length);
         GraphicRange graphicRange = new GraphicRange().minX(0).maxX(0).minY(0).maxY(0);
@@ -232,6 +231,18 @@ public class VectorUtils {
             graphicRange.setMaxX(Math.max(graphicRange.getMaxX(), x[i]));
             graphicRange.setMinY(Math.min(graphicRange.getMinY(), y[i]));
             graphicRange.setMaxY(Math.max(graphicRange.getMaxY(), y[i]));
+        }
+        return graphicRange;
+    }
+
+    public static GraphicRange findGraphicRange(List<Double> x, List<Double> y) {
+        assert (x.size() == y.size());
+        GraphicRange graphicRange = new GraphicRange().minX(0).maxX(0).minY(0).maxY(0);
+        for (int i = 0; i < x.size(); i++) {
+            graphicRange.setMinX(Math.min(graphicRange.getMinX(), x.get(i)));
+            graphicRange.setMaxX(Math.max(graphicRange.getMaxX(), x.get(i)));
+            graphicRange.setMinY(Math.min(graphicRange.getMinY(), y.get(i)));
+            graphicRange.setMaxY(Math.max(graphicRange.getMaxY(), y.get(i)));
         }
         return graphicRange;
     }

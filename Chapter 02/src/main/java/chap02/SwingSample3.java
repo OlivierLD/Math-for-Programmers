@@ -219,6 +219,7 @@ public class SwingSample3 {
             /*
              *  THE DATA
              */
+            // TODO Try g2.draw(new Line2D.Float(30, 20, 80, 90));
             g2d.setColor(new Color(0, 0, 255, 125)); // Line Color
             g2d.setStroke(new BasicStroke(3));             // Line Thickness
             boolean withPoints = false;
