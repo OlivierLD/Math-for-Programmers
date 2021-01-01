@@ -16,6 +16,7 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.function.Function;
 
@@ -217,10 +218,10 @@ public class SwingSample3 {
             g2d.drawString("y = (0.01 * x^3) + (-0.1 * x^2) - (0.2 * x) + 3", 10, 60);
 
             /*
-             *  THE DATA
+             *  THE DATA - The curve.
              */
-            // TODO Try g2.draw(new Line2D.Float(30, 20, 80, 90));
-            g2d.setColor(new Color(0, 0, 255, 125)); // Line Color
+            // TODO Try g2.draw(new Line2D.Float(30, 20, 80, 90)); ?
+            g2d.setColor(new Color(0, 0, 255, 255)); // Line Color
             g2d.setStroke(new BasicStroke(3));             // Line Thickness
             boolean withPoints = false;
             Point previous = null;
