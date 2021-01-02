@@ -41,7 +41,7 @@ public class SwingSample4 {
 
     public SwingSample4() {
         // The JFrame
-        frame = new JFrame("This is example #3");
+        frame = new JFrame("This is example #4");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = frame.getSize();
         System.out.printf("Default frame width %d height %d %n", frameSize.width, frameSize.height);
@@ -90,7 +90,7 @@ public class SwingSample4 {
         new SwingSample4();
 
         // Now, the Data
-        List<Vector2D> dinoVectors = Arrays.asList(new Vector2D[] {
+        List<Vector2D> dinoVectors = Arrays.asList(
                 new Vector2D(6, 4),
                 new Vector2D(3, 1),
                 new Vector2D(1, 2),
@@ -111,8 +111,7 @@ public class SwingSample4 {
                 new Vector2D(2, -3),
                 new Vector2D(1, -2),
                 new Vector2D(3, -1),
-                new Vector2D(5, 1)});
-
+                new Vector2D(5, 1));
 
         VectorUtils.GraphicRange graphicRange = VectorUtils.findGraphicRange(dinoVectors);
         double xAmplitude = graphicRange.getMaxX() - graphicRange.getMinX();
@@ -285,6 +284,32 @@ public class SwingSample4 {
                         HEIGHT - previous.y,
                         findCanvasXCoord.apply(VectorUtils.rotate(Math.toRadians(rotation), dinoVectors.get(0)).getX()),
                         HEIGHT - findCanvasYCoord.apply(VectorUtils.rotate(Math.toRadians(rotation), dinoVectors.get(0)).getY()));
+            }
+            // Scaled ?
+            g2d.setColor(new Color(0, 255, 0, 255)); // Line Color
+            double scale = 0.25;
+            previous = null;
+            for (Vector2D v : dinoVectors) {
+                int pointX = findCanvasXCoord.apply(VectorUtils.scale(scale ,v).getX());
+                int pointY = findCanvasYCoord.apply(VectorUtils.scale(scale ,v).getY());
+//              System.out.println(String.format("x:%f, y:%f => X:%d, Y:%d", x[i], y[i], pointX, pointY));
+                Point here = new Point(pointX, pointY);
+                if (withPoints) {
+                    g2d.fillOval(pointX - (CIRCLE_DIAM / 2),
+                            HEIGHT - pointY - (CIRCLE_DIAM / 2),
+                            CIRCLE_DIAM, CIRCLE_DIAM);
+                }
+                if (previous != null) {
+                    g2d.drawLine(previous.x, HEIGHT - previous.y, here.x, HEIGHT - here.y);
+                }
+                previous = here;
+            }
+            if (previous != null) { // Close the loop
+                g2d.drawLine(
+                        previous.x,
+                        HEIGHT - previous.y,
+                        findCanvasXCoord.apply(VectorUtils.scale(scale, dinoVectors.get(0)).getX()),
+                        HEIGHT - findCanvasYCoord.apply(VectorUtils.scale(scale, dinoVectors.get(0)).getY()));
             }
         });
 //      whiteBoard.getImage(); // This is for the Notebook
