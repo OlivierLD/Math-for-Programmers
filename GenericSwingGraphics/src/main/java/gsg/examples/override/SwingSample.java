@@ -3,12 +3,7 @@ package gsg.examples.override;
 import gsg.SwingUtils.WhiteBoardPanel;
 
 import javax.swing.*;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Point;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 
@@ -111,7 +106,6 @@ public class SwingSample {
             ex.printStackTrace();
         }
         frame.setVisible(true);
-
     }
 
     public static void main(String... args) {
