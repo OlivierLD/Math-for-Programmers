@@ -21,5 +21,11 @@ Use the default `whiteBoardWriter` named `DEFAULT_DASHBOARD_WRITER`.
 Override the `whiteBoardWriter`.
 
 A globe (earth), see `gsg.examples.override.SwingGlobeSample.java`.
+> _Note_: This globe example requires the jar file obtained by the build of the `chartcomponents` module of
+> the `olivsoft-swing` repo at <https://github.com/OlivierLD/olivsoft-swing>. You need to run
+```
+ chartcomponent $ ../gradlew clean shadowJar --parallel
+```
+> and then, copy the `chartcomponents-4.0.0.0-all.jar` at the root of this repo.
 
 ---
