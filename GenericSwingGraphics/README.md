@@ -1,7 +1,7 @@
 ## Introducing Generic Swing Graphics (GSG)
 
 This is a tentative to use some graphical utilities to display graphics on a `JPanel`
-as generically as possible, in a Swing application, as well as in iJava Jupyter Notebooks
+as generically as possible, in a Swing application (in a JFrame for example), as well as in an iJava Jupyter Notebooks
 
 > _Note:_ There is here quite an overlap with what `XChart` already provides.
 
