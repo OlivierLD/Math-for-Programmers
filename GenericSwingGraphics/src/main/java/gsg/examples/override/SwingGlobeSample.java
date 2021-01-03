@@ -15,6 +15,7 @@ import static gsg.VectorUtils.Vector2D;
 
 /**
  * Something completely different
+ * Importing an existing external Component.
  */
 public class SwingGlobeSample {
 
