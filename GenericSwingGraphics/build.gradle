@@ -1,0 +1,27 @@
+plugins {
+  id 'java'
+//  id 'scala'
+  id 'idea'
+  id 'maven'
+  id 'com.github.johnrengelman.shadow' // version '5.2.0'
+}
+
+compileJava.options.encoding = 'ISO-8859-1'
+compileJava.options.compilerArgs += ["-Xlint:unchecked"]
+
+group = 'oliv.math.for.programmer'
+version = '1.0'
+
+
+dependencies {
+    // compile project(':http-tiny-server')
+//    compile 'org.knowm.xchart:xchart:3.7.0'
+//    compile fileTree(dir: '..', include: ['System-Languages-1.0.jar'])
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+//    maven { url "https://raw.githubusercontent.com/OlivierLD/raspberry-coffee/repository" }
+    maven { url "https://www.datanucleus.org/downloads/maven2" } // Contains xmlparserv2 from Oracle
+}

@@ -1,4 +1,4 @@
-package chap02;
+package gsg;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Basic vector manipulation, translated from Python.
  * <p>
- * C'est moi qui l'ai fait.
+ * <i>C'est MOI qui l'ai fait.</i>
  */
 public class VectorUtils {
 
@@ -40,7 +40,17 @@ public class VectorUtils {
             return this.x;
         }
 
+        // For Polar coordinates
+        public double getLength() {
+            return this.x;
+        }
+
         public double getY() {
+            return this.y;
+        }
+
+        // For Polar coordinates
+        public double getAngle() {
             return this.y;
         }
 
@@ -138,7 +148,7 @@ public class VectorUtils {
         List<Vector2D> rotated = new ArrayList<>();
         vectors.forEach(v -> {
             Vector2D polar = toPolar(v);
-            rotated.add(toCartesian(polar.getX(), polar.getY() + angle));
+            rotated.add(toCartesian(polar.getLength(), polar.getAngle() + angle));
         });
         return rotated;
     }
@@ -257,6 +267,19 @@ public class VectorUtils {
             graphicRange.setMaxX(Math.max(graphicRange.getMaxX(), v.getX()));
             graphicRange.setMinY(Math.min(graphicRange.getMinY(), v.getY()));
             graphicRange.setMaxY(Math.max(graphicRange.getMaxY(), v.getY()));
+        });
+        return graphicRange;
+    }
+
+    public static GraphicRange findGraphicRanges(List<List<Vector2D>> data) {
+        GraphicRange graphicRange = new GraphicRange().minX(0).maxX(0).minY(0).maxY(0);
+        data.forEach(vList -> {
+                    vList.forEach(v -> {
+                        graphicRange.setMinX(Math.min(graphicRange.getMinX(), v.getX()));
+                        graphicRange.setMaxX(Math.max(graphicRange.getMaxX(), v.getX()));
+                        graphicRange.setMinY(Math.min(graphicRange.getMinY(), v.getY()));
+                        graphicRange.setMaxY(Math.max(graphicRange.getMaxY(), v.getY()));
+                    });
         });
         return graphicRange;
     }

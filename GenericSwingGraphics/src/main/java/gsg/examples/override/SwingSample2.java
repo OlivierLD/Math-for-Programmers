@@ -1,6 +1,7 @@
-package chap02;
+package gsg.examples.override;
 
-import chap02.SwingUtils.WhiteBoardPanel;
+import gsg.SwingUtils.WhiteBoardPanel;
+import gsg.VectorUtils;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;

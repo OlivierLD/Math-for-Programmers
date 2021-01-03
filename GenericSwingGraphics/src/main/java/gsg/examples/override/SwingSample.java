@@ -1,6 +1,6 @@
-package chap02;
+package gsg.examples.override;
 
-import chap02.SwingUtils.WhiteBoardPanel;
+import gsg.SwingUtils.WhiteBoardPanel;
 
 import javax.swing.*;
 import java.awt.BorderLayout;
