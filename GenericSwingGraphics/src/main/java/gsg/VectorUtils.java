@@ -115,6 +115,9 @@ public class VectorUtils {
     public static Vector2D toCartesian(double length, double angle) {
         return new Vector2D(length * Math.cos(angle), length * Math.sin(angle));
     }
+    public static Vector2D toCartesian(Vector2D vector) {
+        return new Vector2D(vector.getLength() * Math.cos(vector.getAngle()), vector.getLength() * Math.sin(vector.getAngle()));
+    }
 
     //    def translate(translation, vectors):
 //            return [add(translation, v) for v in vectors]
