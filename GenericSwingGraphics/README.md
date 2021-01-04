@@ -15,9 +15,20 @@ See in the provided examples the relevant code:
 - In `Chapter 02`, `GSG_EM_Test_01.ipynb` for an IJava Notebook.
 
 ### Easy mode
-Use the default `whiteBoardWriter` named `DEFAULT_DASHBOARD_WRITER`.
+Use the default `whiteBoardWriter` named `DEFAULT_DASHBOARD_WRITER`, and use the `addSerie` method on the `whiteBoard` instance:
+```java
+Vector2D translation = new Vector2D(x, y);
+List<Vector2D> oneSmallDino = scaled.stream().map(v -> VectorUtils.translate(translation, v)).collect(Collectors.toList());
 
-### Hands-on mode
+WhiteBoardPanel.DataSerie serie100 = new WhiteBoardPanel.DataSerie()
+                            .data(oneSmallDino)
+                            .graphicType(WhiteBoardPanel.GraphicType.CLOSED_LINE)
+                            .lineThickness(1)
+                            .color(Color.BLACK);
+whiteBoard.addSerie(serie100);
+```
+
+### Under-the-hood mode
 Override the `whiteBoardWriter`.
 
 A globe (earth), see `gsg.examples.override.SwingGlobeSample.java`.
